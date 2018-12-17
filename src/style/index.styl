@@ -19,6 +19,10 @@ body
       text-align center
       font-size: 32px
       text-shadow 2px 2px 2px rgba(0, 0, 0, .3)
+.done{
+  color:#c4bbbb;
+  cursor:not-allowed;
+}
 .center
   .logo-box
     width 150px
@@ -172,6 +176,35 @@ body
   height: 100%;
   width: 100%;
   background: #fff;
+  .proup_wrap{
+    background:black;
+    height:100%;
+    width: 100%;
+    position: fixed;
+    z-index:999999;
+    opacity: 1;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    .proup_content{
+      height:95%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      div {
+        height: 100%;
+        canvas {
+          height:100%;
+          width: auto !important;
+        }
+      };
+      .icon {
+        color: #1890ff;
+        cursor:pointer
+      }
+    }
+  }
   .ev_header{
     height: 60px;
     width: 100%;
@@ -198,7 +231,9 @@ body
     height: auto;
     width: 100%;
     display: flex;
+    background: #fff;
     justify-content: center;
+    padding-bottom: 40px;
     .ev_body_card {
       height: 100%;
       width: 800px;
@@ -208,5 +243,26 @@ body
         padding-bottom: 10px;
       }
     }
+    table {
+      width: 800px;
+    }
   }
+}
+.handleBtn{
+  color: #1890ff;
+  cursor:pointer
+}
+.handleBtn:hover{
+  color: #0c83f2;
+}
+.react-pdf__Page{
+  overflow: auto;
+}
+.react-pdf__Page__annotations {
+  height : 0px !important;
+}
+.ant-tag-none {
+    color: #a2a5a8 !important;
+    background: #e3e7e9 !important;
+    border-color: #cfd6da !important;
 }

@@ -51,7 +51,7 @@ class Login extends Component {
   componentWillMount() {
     var self = this
     const { history, initalLogo } = this.props;
-    history.push('/login');
+    // history.push('/login');
     initalLogo();
     document.onkeydown = function (event) {
       var e = event || window.event;
@@ -70,6 +70,7 @@ class Login extends Component {
   }
 
   login = async () => {
+    console.log(this.state.iCode, this.state.vCode)
     if (this.state.userName == "") {
       message.error('用户名不可为空');
       return
@@ -80,29 +81,41 @@ class Login extends Component {
       message.error('验证码不可为空');
       this.vrifcode.rfresh()
       return
-    } else if (this.state.iCode != this.state.vCode) {
+    } else if (this.state.iCode.toUpperCase() != this.state.vCode.toUpperCase()) {
       message.error('验证码错误');
       this.vrifcode.rfresh()
       return
     }
     let state = store.getState()
-    let { username, password } = this.state
-    // let res = await axios({
-    //   method: 'get',
-    //   url: `${state.path}/api/login`,
-    //   data: { username, password },
-    //   withCredentials: true
-    // })
-    // store.dispatch({ type: 'SET_IS_LOGIN', isLogin: true })
-    sessionStorage.setItem("isLogin", 1)
-    store.dispatch({ type: 'SET_USER', user: [] })
-    document.onkeydown = function (event) {
-      var e = event || window.event;
-      if (e && e.keyCode == 13) {
-        return false
+    let { userName, password } = this.state
+    let res = await axios({
+      method: 'POST',
+      url: `${state.path}/users/login`,
+      data: { 
+        username: userName,
+        password: password
+      },
+    })
+    if (res.data.length != 0) {
+      sessionStorage.setItem("isLogin", 1)
+      sessionStorage.setItem("userId", res.data[0].id)
+      sessionStorage.setItem("isdone", res.data[0].isdone)
+      store.dispatch({ type: 'SET_USER', user: [] })
+      document.onkeydown = function (event) {
+        var e = event || window.event;
+        if (e && e.keyCode == 13) {
+          return false
+        }
+      };
+      if (res.data[0].reset_pas == 0) {
+        document.getElementById('resetpsd').click()
+      } else {
+        document.getElementById('login').click()
       }
-    };
-    document.getElementById('login').click()
+    } else {
+      message.error('账号或密码出错');
+      this.vrifcode.rfresh()
+    }
   }
 
   render() {
@@ -155,6 +168,7 @@ class Login extends Component {
               <div className="loginBtn">
                 <div onClick={this.login} className="btn">登录</div>
                 <Link to='/evaluation_table' id="login"></Link>
+                <Link to='/resetpsd' id="resetpsd"></Link>
               </div>
             </div>
           </div>
